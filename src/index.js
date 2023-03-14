@@ -1,4 +1,5 @@
 const express = require('express');
+const loginRouter = require('./routes/loginRouter');
 const talkerRouter = require('./routes/talkerRouter');
 
 const app = express();
@@ -17,3 +18,5 @@ app.listen(PORT, () => {
 });
 
 app.use('/talker', talkerRouter);
+
+app.use('/login', loginRouter);
