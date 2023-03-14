@@ -14,8 +14,22 @@ talkerRouter.get('/', async (_req, res) => {
         const data = await readJsonData(talkerPath);
         return res.status(200).json(data);
     } catch (e) {
-        res.status(200).send({ message: `error: ${e}` });
+        res.status(500).send({ message: `error: ${e}` });
     }
+});
+
+talkerRouter.get('/:id', async (req, res) => {
+    try {    
+        const { id } = req.params;
+        const talkerJson = await readJsonData(talkerPath);
+        const findIdTalker = talkerJson.find((talk) => talk.id === +(id));
+        if (!findIdTalker) {
+            return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
+        }
+        return res.status(200).json(findIdTalker);
+    } catch (e) {
+        res.status(500).send({ message: `error: ${e}` });
+    } 
 });
 
 module.exports = talkerRouter;
