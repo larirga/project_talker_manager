@@ -16,7 +16,10 @@ const { isMissingName,
 
 const tokenValidator = require('../middlewares/tokenValidator');
 
-const { insertTalkerFile, updateTalkerFile, deleteTalkerFile } = require('../utils/handleTalker');
+const { insertTalkerFile, 
+    updateTalkerFile, 
+    deleteTalkerFile, 
+    findQueryTalker } = require('../utils/handleTalker');
 
 const readJsonData = require('../utils/readJsonData');
 
@@ -41,6 +44,13 @@ talkerRouter.get('/', async (_req, res) => {
     } catch (e) {
         res.status(500).send({ message: `error: ${e}` });
     }
+});
+
+talkerRouter.get('/search', tokenValidator, async (req, res) => {
+    const { q } = req.query;
+
+    const queryFilter = await findQueryTalker(q);
+    return res.status(200).json(queryFilter);
 });
 
 talkerRouter.get('/:id', async (req, res) => {

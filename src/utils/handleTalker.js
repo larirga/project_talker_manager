@@ -45,8 +45,19 @@ const deleteTalkerFile = async (id) => {
     await fs.writeFile(talkerPath, JSON.stringify(filterFile));
 };  
 
+const findQueryTalker = async (query) => {
+    const arrayTalker = await readJsonData(talkerPath);
+    if (!query) {
+        return arrayTalker;
+    }
+    const filterTalker = arrayTalker.filter((t) => t.name.includes(query));
+
+    return filterTalker;
+};
+
 module.exports = {
     insertTalkerFile,
     updateTalkerFile,
     deleteTalkerFile,
+    findQueryTalker,
 };
