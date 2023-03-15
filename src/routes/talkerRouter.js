@@ -18,7 +18,7 @@ const { isMissingName,
 
 const tokenValidator = require('../middlewares/tokenValidator');
 
-const insertTalkerFile = require('../utils/handleTalker');
+const { insertTalkerFile, updateTalkerFile } = require('../utils/handleTalker');
 
 const readJsonData = require('../utils/readJsonData');
 
@@ -73,6 +73,21 @@ talkerRouter.post('/', ...validators, async (req, res) => {
         return res.status(201).json(newTalker);
     } catch (e) {
         res.status(500).send({ message: `error: ${e}` });
+    }
+});
+
+talkerRouter.put('/:id', ...validators, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const talker = req.body;
+    
+        const updateFile = await updateTalkerFile(talker, +(id));
+        if (!updateFile) {
+            return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    } return res.status(200).json(updateFile);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).send({ message: `error: ${e}` });
     }
 });
 

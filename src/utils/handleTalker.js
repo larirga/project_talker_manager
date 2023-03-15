@@ -4,7 +4,7 @@ const path = require('path');
 
 const readJsonData = require('./readJsonData');
 
-const talkerPath = path.resolve(__dirname, '../talker.json');
+const talkerPath = path.join(__dirname, '../talker.json');
 
 const insertTalkerFile = async (talker) => {
     try {
@@ -19,4 +19,28 @@ const insertTalkerFile = async (talker) => {
     }
 };
 
-module.exports = insertTalkerFile;
+const updateTalkerFile = async (talker, id) => {
+    try {
+        const { name, age, talk } = talker;
+        const arrayTalker = await readJsonData(talkerPath);
+        const findTalker = arrayTalker.find((t) => t.id === +id);
+        if (!findTalker) {
+            return false;
+        }
+        findTalker.name = name;
+        findTalker.age = age;
+        findTalker.talk = talk;
+        await fs.writeFile(talkerPath, JSON.stringify(arrayTalker));
+        return findTalker;
+    } catch (e) {
+        console.log(e);
+        const err = new Error('Error update file');
+        err.statusCode = 500;
+        return false;
+    }
+};
+
+module.exports = {
+    insertTalkerFile,
+    updateTalkerFile,
+};
