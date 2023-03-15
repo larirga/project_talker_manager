@@ -47,10 +47,13 @@ talkerRouter.get('/', async (_req, res) => {
 });
 
 talkerRouter.get('/search', tokenValidator, async (req, res) => {
-    const { q } = req.query;
-
-    const queryFilter = await findQueryTalker(q);
-    return res.status(200).json(queryFilter);
+    try {
+        const { q } = req.query;
+        const queryFilter = await findQueryTalker(q);
+        return res.status(200).json(queryFilter);
+    } catch (e) {
+        res.status(500).send({ message: `error: ${e}` });
+    }
 });
 
 talkerRouter.get('/:id', async (req, res) => {
