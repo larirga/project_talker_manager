@@ -2,8 +2,6 @@ const { Router } = require('express');
 
 const talkerRouter = Router();
 
-// const fs = require('fs').promises;
-
 const path = require('path');
 
 const { isMissingName, 
@@ -18,7 +16,7 @@ const { isMissingName,
 
 const tokenValidator = require('../middlewares/tokenValidator');
 
-const { insertTalkerFile, updateTalkerFile } = require('../utils/handleTalker');
+const { insertTalkerFile, updateTalkerFile, deleteTalkerFile } = require('../utils/handleTalker');
 
 const readJsonData = require('../utils/readJsonData');
 
@@ -86,7 +84,16 @@ talkerRouter.put('/:id', ...validators, async (req, res) => {
             return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     } return res.status(200).json(updateFile);
     } catch (e) {
-        console.log(e);
+        return res.status(500).send({ message: `error: ${e}` });
+    }
+});
+
+talkerRouter.delete('/:id', tokenValidator, async (req, res) => {
+    try {
+        const { id } = req.params;
+        await deleteTalkerFile(id);
+        return res.status(204).end();
+    } catch (e) {
         return res.status(500).send({ message: `error: ${e}` });
     }
 });

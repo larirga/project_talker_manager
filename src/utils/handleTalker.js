@@ -33,14 +33,20 @@ const updateTalkerFile = async (talker, id) => {
         await fs.writeFile(talkerPath, JSON.stringify(arrayTalker));
         return findTalker;
     } catch (e) {
-        console.log(e);
         const err = new Error('Error update file');
         err.statusCode = 500;
         return false;
     }
 };
 
+const deleteTalkerFile = async (id) => {
+    const arrayTalker = await readJsonData(talkerPath);
+    const filterFile = arrayTalker.filter((t) => t.id !== +id);
+    await fs.writeFile(talkerPath, JSON.stringify(filterFile));
+};  
+
 module.exports = {
     insertTalkerFile,
     updateTalkerFile,
+    deleteTalkerFile,
 };
